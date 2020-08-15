@@ -74,3 +74,11 @@ type UserDeptInfo struct {
 	// IsLeader 在所在的部门内是否为上级
 	IsLeader bool
 }
+
+// UserID 访问用户身份
+type UserID struct {
+	// UserID 成员UserID,当用户为企业成员时返回
+	UserID string
+	// OpenID 非企业成员的标识,非企业成员授权时返回
+	OpenID string
+}

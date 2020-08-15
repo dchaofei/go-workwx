@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"mime/multipart"
 	"net/url"
 	"sync"
@@ -121,7 +122,13 @@ func (c *WorkwxApp) executeQyapiGet(path string, req urlValuer, respObj interfac
 	}
 	defer resp.Body.Close()
 
-	decoder := json.NewDecoder(resp.Body)
+	all, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(all))
+
+	decoder := json.NewDecoder(bytes.NewReader(all))
 	err = decoder.Decode(respObj)
 	if err != nil {
 		// TODO: error_chain

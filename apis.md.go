@@ -16,6 +16,20 @@ func (c *WorkwxApp) execGetAccessToken(req reqAccessToken) (respAccessToken, err
 	return resp, nil
 }
 
+// execGetUserInfo 获取访问用户身份
+func (c *WorkwxApp) execGetUserID(req reqUserID) (respUserID, error) {
+	var resp respUserID
+	err := c.executeQyapiGet("/cgi-bin/user/getuserinfo", req, &resp, true)
+	if err != nil {
+		return respUserID{}, err
+	}
+	if bizErr := resp.TryIntoErr(); bizErr != nil {
+		return respUserID{}, bizErr
+	}
+
+	return resp, nil
+}
+
 // execUserGet 读取成员
 func (c *WorkwxApp) execUserGet(req reqUserGet) (respUserGet, error) {
 	var resp respUserGet

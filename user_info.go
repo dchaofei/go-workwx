@@ -1,5 +1,18 @@
 package workwx
 
+// GetUserInfo 获取访问用户身份,该接口用于根据code获取成员信息
+func (c *WorkwxApp) GetUserID(code string) (*UserID, error) {
+	resp, err := c.execGetUserID(reqUserID{
+		Code: code,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	obj := resp.intoUserID()
+	return &obj, nil
+}
+
 // GetUser 读取成员
 func (c *WorkwxApp) GetUser(userid string) (*UserInfo, error) {
 	resp, err := c.execUserGet(reqUserGet{

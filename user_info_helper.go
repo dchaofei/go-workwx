@@ -55,3 +55,10 @@ func (x respUserDetail) intoUserInfo() UserInfo {
 		QRCodeURL:   x.QRCodeURL,
 	}
 }
+
+func (x respUserID) intoUserID() UserID {
+	return UserID{
+		UserID: x.UserId,
+		OpenID: x.OpenId,
+	}
+}

@@ -321,3 +321,22 @@ type respMediaUploadImg struct {
 
 	URL string `json:"url"`
 }
+
+type reqUserID struct {
+	Code string
+}
+
+var _ urlValuer = reqUserID{}
+
+func (x reqUserID) intoURLValues() url.Values {
+	return url.Values{
+		"code": {x.Code},
+	}
+}
+
+type respUserID struct {
+	respCommon
+
+	UserId string `json:"UserId"`
+	OpenId string `json:"OpenId"`
+}
