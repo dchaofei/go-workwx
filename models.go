@@ -57,14 +57,15 @@ type respAccessToken struct {
 
 // reqMessage 消息发送请求
 type reqMessage struct {
-	ToUser  []string
-	ToParty []string
-	ToTag   []string
-	ChatID  string
-	AgentID int64
-	MsgType string
-	Content map[string]interface{}
-	IsSafe  bool
+	ToUser          []string
+	ToParty         []string
+	ToTag           []string
+	ChatID          string
+	AgentID         int64
+	MsgType         string
+	Content         map[string]interface{}
+	IsSafe          bool
+	IsEnableIDTrans bool
 }
 
 var _ bodyer = reqMessage{}
@@ -74,6 +75,11 @@ func (x reqMessage) intoBody() ([]byte, error) {
 	safeInt := 0
 	if x.IsSafe {
 		safeInt = 1
+	}
+
+	enableIDTransInt := 0
+	if x.IsEnableIDTrans {
+		enableIDTransInt = 1
 	}
 
 	obj := map[string]interface{}{
@@ -92,6 +98,7 @@ func (x reqMessage) intoBody() ([]byte, error) {
 		obj["touser"] = strings.Join(x.ToUser, "|")
 		obj["toparty"] = strings.Join(x.ToParty, "|")
 		obj["totag"] = strings.Join(x.ToTag, "|")
+		obj["enable_id_trans"] = enableIDTransInt
 	}
 
 	result, err := json.Marshal(obj)

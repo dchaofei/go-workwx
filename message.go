@@ -12,8 +12,9 @@ func (c *WorkwxApp) SendTextMessage(
 	recipient *Recipient,
 	content string,
 	isSafe bool,
+	isEnableIDTrans bool,
 ) error {
-	return c.sendMessage(recipient, "text", map[string]interface{}{"content": content}, isSafe)
+	return c.sendMessage(recipient, "text", map[string]interface{}{"content": content}, isSafe, isEnableIDTrans)
 }
 
 // SendImageMessage 发送图片消息
@@ -30,7 +31,7 @@ func (c *WorkwxApp) SendImageMessage(
 		"image",
 		map[string]interface{}{
 			"media_id": mediaID,
-		}, isSafe,
+		}, isSafe,false,
 	)
 }
 
@@ -48,7 +49,7 @@ func (c *WorkwxApp) SendVoiceMessage(
 		"voice",
 		map[string]interface{}{
 			"media_id": mediaID,
-		}, isSafe,
+		}, isSafe,false,
 	)
 }
 
@@ -70,7 +71,7 @@ func (c *WorkwxApp) SendVideoMessage(
 			"media_id":    mediaID,
 			"description": description, // TODO: 零值
 			"title":       title,       // TODO: 零值
-		}, isSafe,
+		}, isSafe,false,
 	)
 }
 
@@ -88,7 +89,7 @@ func (c *WorkwxApp) SendFileMessage(
 		"file",
 		map[string]interface{}{
 			"media_id": mediaID,
-		}, isSafe,
+		}, isSafe,false,
 	)
 }
 
@@ -112,7 +113,7 @@ func (c *WorkwxApp) SendTextCardMessage(
 			"description": description,
 			"url":         url,
 			"btntxt":      buttonText, // TODO: 零值
-		}, isSafe,
+		}, isSafe,false,
 	)
 }
 
@@ -136,7 +137,7 @@ func (c *WorkwxApp) SendNewsMessage(
 			"description": description, // TODO: 零值
 			"url":         url,
 			"picurl":      picURL, // TODO: 零值
-		}, isSafe,
+		}, isSafe,false,
 	)
 }
 
@@ -169,7 +170,7 @@ func (c *WorkwxApp) SendMPNewsMessage(
 					"digest":             digest,
 				},
 			},
-		}, isSafe,
+		}, isSafe,false,
 	)
 }
 
@@ -184,7 +185,7 @@ func (c *WorkwxApp) SendMarkdownMessage(
 	content string,
 	isSafe bool,
 ) error {
-	return c.sendMessage(recipient, "markdown", map[string]interface{}{"content": content}, isSafe)
+	return c.sendMessage(recipient, "markdown", map[string]interface{}{"content": content}, isSafe, false)
 }
 
 // sendMessage 发送消息底层接口
@@ -196,6 +197,7 @@ func (c *WorkwxApp) sendMessage(
 	msgtype string,
 	content map[string]interface{},
 	isSafe bool,
+	isEnableIDTrans bool,
 ) error {
 	isApichatSendRequest := false
 	if !recipient.isValidForMessageSend() {
@@ -209,14 +211,15 @@ func (c *WorkwxApp) sendMessage(
 	}
 
 	req := reqMessage{
-		ToUser:  recipient.UserIDs,
-		ToParty: recipient.PartyIDs,
-		ToTag:   recipient.TagIDs,
-		ChatID:  recipient.ChatID,
-		AgentID: c.AgentID,
-		MsgType: msgtype,
-		Content: content,
-		IsSafe:  isSafe,
+		ToUser:          recipient.UserIDs,
+		ToParty:         recipient.PartyIDs,
+		ToTag:           recipient.TagIDs,
+		ChatID:          recipient.ChatID,
+		AgentID:         c.AgentID,
+		MsgType:         msgtype,
+		Content:         content,
+		IsSafe:          isSafe,
+		IsEnableIDTrans: isEnableIDTrans,
 	}
 
 	var resp respMessageSend
