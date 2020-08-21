@@ -53,6 +53,7 @@ func (x respUserDetail) intoUserInfo() UserInfo {
 		Alias:       x.Alias,
 		Status:      UserStatus(x.Status),
 		QRCodeURL:   x.QRCodeURL,
+		MainDeptID:  x.MainDepartment,
 	}
 }
 
